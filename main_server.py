@@ -9,7 +9,7 @@ sys_config = load_config()
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-    return "欢迎使用**系统"
+    return f"欢迎使用【 {sys_config.get('project_name')} 】系统"
 
 
 @app.route("/hello", methods=['GET', 'POST'])
