@@ -18,14 +18,23 @@ class DbHelper:
             return {key: value for key, value in zip(fields, row)}
 
         sys_config = load_config()
-        self.conn = sqlite3.connect(sys_config.get('data_file'), check_same_thread=True)
+        self.conn = sqlite3.connect(sys_config.get('db_file'), check_same_thread=True)
         # self.conn = sqlite3.connect(r'F:\tmp\test_sqlite\demo.db', check_same_thread=True)
         # self.conn.row_factory = sqlite3.Row
         self.conn.row_factory = dict_factory
         self.cursor = self.conn.cursor()
 
-    def query_sql(self, query_sql: str, query_para) -> list:
-        res = self.cursor.execute(query_sql, query_para)
+    def query_sql(self, query_sql: str, query_para=None) -> list:
+        res = None
+        try:
+            if query_para:
+                res = self.cursor.execute(query_sql, query_para)
+            else:
+                res = self.cursor.execute(query_sql)
+        except:
+            logger.error(traceback.format_exc())
+        else:
+            res = res.fetchall()
         return res
 
     def exec_sql(self, exec_sql: str, exec_para):
@@ -36,6 +45,7 @@ class DbHelper:
                 self.cursor.executemany(exec_sql, exec_para)
         except:
             self.conn.rollback()
+            logger.error(traceback.format_exc())
             return -1
         else:
             self.conn.commit()

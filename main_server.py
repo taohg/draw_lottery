@@ -1,7 +1,10 @@
+import json
+
 from flask import Flask, render_template
 
 from common.config import load_config
 from common.project_log import logger
+from business import main_business as mb
 
 app = Flask(__name__)
 sys_config = load_config()
@@ -20,6 +23,14 @@ def hello():
 @app.route("/boot", methods=['GET', 'POST'])
 def boot():
     return render_template('bootstrap.html')
+
+@app.route("/getSysUser", methods=['GET', 'POST'])
+def getSysUser():
+
+    v_list = [{'cust_name': 'aaaa'}]
+    mb.add_customer_info(v_list)
+    # return 'json.dumps(mb.get_sys_user())'
+    return json.dumps(mb.get_sys_user())
 
 
 if __name__ == '__main__':
