@@ -18,7 +18,7 @@ class DbHelper:
             return {key: value for key, value in zip(fields, row)}
 
         sys_config = load_config()
-        self.conn = sqlite3.connect(sys_config.get('db_file'), check_same_thread=True)
+        self.conn = sqlite3.connect(sys_config.get('db_file'), check_same_thread=False)
         # self.conn = sqlite3.connect(r'F:\tmp\test_sqlite\demo.db', check_same_thread=True)
         # self.conn.row_factory = sqlite3.Row
         self.conn.row_factory = dict_factory
@@ -32,8 +32,10 @@ class DbHelper:
             else:
                 res = self.cursor.execute(query_sql)
         except:
+            logger.error(query_sql)
             logger.error(traceback.format_exc())
         else:
+            logger.debug(query_sql)
             res = res.fetchall()
         return res
 

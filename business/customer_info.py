@@ -69,7 +69,18 @@ class CustomerInfo:
     def get_list(self):
         _sql = """
             select * from customer_info
+            where is_valid = '0'
         """
         res_list = self.db_helper.query_sql(_sql)
+        logger.debug(f'res_list:{res_list}')
+        return res_list
+
+    def get_list_by_user(self, create_user=''):
+        _sql = """
+            select * from customer_info
+            where is_valid = '0'
+              and create_user = ?
+        """
+        res_list = self.db_helper.query_sql(_sql, (create_user,))
         logger.debug(f'res_list:{res_list}')
         return res_list
