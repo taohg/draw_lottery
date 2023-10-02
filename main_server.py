@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 from common.config import load_config
 from common.project_log import logger
-from common.project_util import md5
+from common.project_util import md5, Pagination
 from common import sys_constant as const
 from business import main_business as mb
 
@@ -55,7 +55,8 @@ def login():
             session['role_name'] = const.SYS_ROLE[tmp_list[0].get('is_supper')]
             session['is_login'] = 'true'
             if tmp_list[0].get('is_supper') in [0, 1]:
-                res = make_response(redirect(url_for('sys_index')))
+                # res = make_response(redirect(url_for('sys_index')))
+                res = make_response(redirect(url_for('sys_index2')))
                 res.set_cookie("test_cookie", "test_value", max_age=60*60*24)
                 res.set_cookie("user_account", user_account, max_age=60*60*24)
                 res.set_cookie("user_password", user_password, max_age=60*60*24)
@@ -140,6 +141,20 @@ def sys_index():
     return render_template('sys_index.html', page_content=page_content)
 
 
+@app.route("/sys_index2", methods=['GET', 'POST'])
+def sys_index2():
+    """
+    系统经理登录成功后默认页面
+    :return:
+    """
+    page_content = {
+        'current_user': session['user_account'],
+        'role_key': session['role_key'],
+        'role_name': session['role_name'],
+    }
+    return render_template('sys_index2.html', page_content=page_content)
+
+
 @app.route("/cust_index", methods=['GET', 'POST'])
 def cust_index():
     """
@@ -182,9 +197,18 @@ def add_cust_info():
 
 @app.route("/get_cust_list", methods=['GET', 'POST'])
 def get_customer_list():
-    user_account = request.args.get('u')
-    res_list = mb.get_customer_list(user_account=user_account)
-    return res_list
+    user_account = session['user_account']
+    page = 1
+    rows = 10
+    if request.method.upper() == 'GET':
+        page = int(request.args.get('page'))
+        rows = int(request.args.get('rows'))
+    else:
+        page = int(request.form.get('page'))
+        rows = int(request.form.get('rows'))
+    data_list = mb.get_customer_list(user_account=user_account)
+    pagination = Pagination(data_list=data_list, page_size=rows, page_num=page)
+    return pagination.get_result()
 
 
 @app.route("/get_sys_user", methods=['GET', 'POST'])

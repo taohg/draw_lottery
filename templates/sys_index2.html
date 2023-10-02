@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/bootstrap-3.4.1/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/jquery-easyui-1.10.17/themes/default/easyui.css">
+    <link rel="stylesheet" href="/static/jquery-easyui-1.10.17/themes/icon.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+    <script src="/static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+    <script src="/static/jquery-easyui-1.10.17/jquery.easyui.min.js"></script>
+</head>
+<body>
+<h3>这是登录成功默认页面</h3>
+<span>
+    当前用户是：{{ page_content.current_user}}
+</span>
+<br>
+<span>
+    当前用户角色是：{{ page_content.user_role}}
+</span>
+<div>
+    <ul>
+        {% for k, v in page_content.items() %}
+        <li>{{k}} ==== {{v}}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="container" style="border:1px solid red">
+    <div>
+        <input type="button" value="新增客户" class="btn btn-primary" data-toggle="modal" data-target="#modalAddCust">
+        <input id="btnAddCust" type="button" value="新增客户" class="btn btn-primary">
+    </div>
+</div>
+<div style="margin:20px 0;"></div>
+<div class="container">
+    <table id="dgCustList"></table>
+</div>
+
+<script>
+    $(function(){
+        bindBtnAddEvent();
+        initDatagrid();
+    })
+
+</script>
+<script src="/static/js/sys_index.js"></script>
+</body>
+</html>
