@@ -21,6 +21,28 @@ def add_customer_info(param_data):
     return {'res_code': '0', 'res_msg': 'success'}
 
 
+def edit_customer_info(param_data):
+    customer_info_dao = CustomerInfo()
+    record = dict()
+    record.update(param_data)
+    res = customer_info_dao.edit_record(record=record)
+    logger.debug(f"{param_data.get('update_user')}修改了客户{param_data.get('cust_id')}")
+    return {'res_code': '0', 'res_msg': 'success'}
+
+
+def del_customer_info(param_data):
+    customer_info_dao = CustomerInfo()
+    data_cnt = customer_info_dao.get_count()
+    record = dict()
+    record.update(param_data)
+    record.update({
+        'is_valid': 1,
+    })
+    customer_info_dao.del_record(record=record)
+    logger.debug(f"{param_data.get('update_user')}删除了客户{param_data.get('cust_id')}")
+    return {'res_code': '0', 'res_msg': 'success'}
+
+
 def get_customer_list(user_account, user_password=''):
     """
     根据系统用户查询客户列表信息

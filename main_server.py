@@ -195,6 +195,28 @@ def add_cust_info():
     return mb.add_customer_info(request.form)
 
 
+@app.route('/edit_cust_info', methods=['POST'])
+def edit_cust_info():
+    form_data = {}
+    form_data.update(request.form)
+    form_data.update({
+        'update_user': session['user_account'],
+        'update_time': datetime.datetime.now().strftime(const.DATETIME_FORMATTER)
+    })
+    return mb.edit_customer_info(request.form)
+
+
+@app.route('/del_cust_info', methods=['POST'])
+def del_cust_info():
+    form_data = {}
+    form_data.update(request.form)
+    form_data.update({
+        'update_user': session['user_account'],
+        'update_time': datetime.datetime.now().strftime(const.DATETIME_FORMATTER)
+    })
+    return mb.del_customer_info(request.form)
+
+
 @app.route("/get_cust_list", methods=['GET', 'POST'])
 def get_customer_list():
     user_account = session['user_account']
