@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="static/bootstrap-3.4.1/css/bootstrap.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"
+            integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+    <script src="/static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h3>这是登录成功默认页面</h3>
+<span>
+    当前用户是：{{ page_content.current_user}}
+</span>
+<br>
+<span>
+    当前用户角色是：{{ page_content.user_role}}
+</span>
+<div>
+    <ul>
+        {% for k, v in page_content.items() %}
+        <li>{{k}} ==== {{v}}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="container" style="border:1px solid red">
+    <div>
+        <input type="button" value="新增客户" class="btn btn-primary" data-toggle="modal" data-target="#modalAddCust">
+        <input id="btnAddCust" type="button" value="新增客户" class="btn btn-primary">
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalAddCust" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新增客户</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="formAddCust">
+                    <div class="form-group">
+                        <label for="cust_name" class="col-sm-3 control-label">客户单位名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="cust_name" name="cust_name" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cust_addr" class="col-sm-3 control-label">客户单位地址</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="cust_addr" name="cust_addr" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cust_logo" class="col-sm-3 control-label">客户单位公司logo</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="cust_logo" name="cust_logo" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link_name" class="col-sm-3 control-label">客户接口人</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="link_name" name="link_name" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="link_phone" class="col-sm-3 control-label">接口人联系电话</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="link_phone" name="link_phone"
+                                   placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="party_name" class="col-sm-3 control-label">年会名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="party_name" name="party_name"
+                                   placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="plan_date" class="col-sm-3 control-label">年会举办日期</label>
+                        <div class="col-sm-9">
+                            <input type="email" class="form-control" id="plan_date" name="plan_date"
+                                   placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="user_num" class="col-sm-3 control-label">参会人数</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="user_num" name="user_num" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="remark" class="col-sm-3 control-label">备注</label>
+                        <div class="col-sm-9">
+                            <textarea id="remark" name="remark" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile" class="col-sm-3 control-label">File input</label>
+                        <div class="col-sm-9">
+                            <input type="file" id="exampleInputFile">
+                            <p class="help-block">Example block-level help text here.</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="closeModalAddCust();">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitAddCust();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //$(document).off('.data-api')
+    $(function(){
+        bindBtnAddEvent();
+    })
+
+    function bindBtnAddEvent(){
+        $('#btnAddCust').click(function(){
+            console.log('click add cust');
+            $('#modalAddCust').modal('show');
+        });
+    }
+
+    function submitAddCust(){
+        $.ajax({
+            url: "/add_cust_info",
+            type: "post",
+            data: $('#formAddCust').serialize(),
+            dataType: "JSON",
+            success: function(res){
+                console.log(res)
+                if (res.res_code == '0'){
+                    //$('#modalAddCust').modal('show');
+                    $('#modalAddCust').modal('hide');
+                }
+            }
+        });
+    }
+
+
+    function closeModalAddCust(){
+        $('#modalAddCust').modal('hide');
+    }
+
+
+
+</script>
+</body>
+</html>

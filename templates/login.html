@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-3.4.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+    <script src="/static/bootstrap-3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h3>这是登录页面</h3>
+<div style="width:450px; height:300px;border:1px solid #ddd">
+    <h3 style="text-align: center;">请登录</h3>
+    <form action="/login" method="post">
+        <div class="form-group">
+            <label for="user_account">用户名</label>
+            <input type="text" class="form-control" name="user_account" id="user_account" placeholder="请输入用户名">
+        </div>
+        <div class="form-group">
+            <label for="user_password">密码</label>
+            <input type="password" class="form-control" name="user_password" id="user_password" placeholder="请输入密码">
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"> Check me out
+            </label>
+        </div>
+        <div>
+            <span style="color:red">{{ login_msg }}</span>
+        </div>
+        <button type="submit" class="btn btn-default" style="display:block;margin-left:auto;margin-right:auto;">登录</button>
+    </form>
+</div>
+</body>
+</html>
