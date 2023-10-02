@@ -5,6 +5,37 @@ function bindBtnAddEvent(){
         $('#modalAddCust').modal('show');
     });
 }
+$('#cust_logo2').filebox({
+    onChange: function(e){
+        fileUpload(this, 'cust_logo2');
+    }
+});
+
+function fileUpload(_obj, comp_id){
+    console.log('准备上床文件');
+    let value = $("#" + comp_id).filebox('getValue');
+    let files = $("#" + comp_id).next().find('input[type=file]')[0].files;
+    let files2 = $(_obj).context.ownerDocument.activeElement.files;
+    console.log(files2);
+    if(value && files[0]){
+        let formData = new FormData();
+        formData.append("folder", '数据导入文件');
+        formData.append("guid", 'guid');
+        formData.append('file', files[0]);//默认的文件数据名为“Filedata”
+        $.ajax({
+            url: '/uploader', //单文件上传
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (res) {
+                console.log(res);
+                $('#cust_logo').val(res);
+            }
+        });
+    }
+}
+
 
 function initDatagrid(){
     $('#dgCustList').datagrid({
@@ -38,7 +69,16 @@ function initDatagrid(){
         columns: [[
             {field:'id',title:'ID',width:'10%', hidden:true},
             {field:'cust_addr',title:'客户单位地址',width:'10%',align:'center'},
-            {field:'cust_logo',title:'客户单位logo',width:'10%',align:'center'},
+            {field:'cust_logo',title:'客户单位logo',width:'10%',align:'center',
+                formatter: function(value, row, index){
+                    return "<img src='"+value+"' style='width:18px;'>"
+                }
+            },
+            {field:'cust_logo2',title:'客户单位logo',width:'10%',align:'center',
+                formatter: function(){
+                    return "<img src='/static/image/data/client.jpg' style='width:18px;'>"
+                }
+            },
             {field:'link_name',title:'客户接口人',width:'10%',align:'center'},
             {field:'link_phone',title:'接口人电话',width:'10%',align:'center'},
             {field:'party_name',title:'年会名称',width:'10%',align:'center'},
@@ -115,7 +155,7 @@ function closeWinAddCust(){
     $('#cust_id').val('');
     $('#cust_name').textbox('clear');
     $('#cust_addr').textbox('clear');
-    $('#cust_logo').textbox('clear');
+    $('#cust_logo').val('');
     $('#link_name').textbox('clear');
     $('#plan_date').datebox('clear');
     $('#winAddCust').window('close');

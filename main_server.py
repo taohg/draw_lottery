@@ -177,11 +177,14 @@ def upload_file():
 @app.route('/uploader', methods=['GET', 'POST'])
 def uploader():
     if request.method == 'POST':
-        f = request.files['file']
-        if not os.path.exists(os.path.join(sys_config.get('upload_dir'))):
-            os.mkdir(os.path.join(sys_config.get('upload_dir')))
-        f.save(os.path.join(sys_config.get('upload_dir'), secure_filename(f.filename)))
-        return 'file uploaded successfully'
+        data_file = request.files['file']
+        _dir_path = os.path.join('static', 'tmp')
+        _tmp_logo_name = datetime.datetime.now().strftime(const.DATETIME_YYYYMMDDHHMMSS) + data_file.filename[data_file.filename.rfind('.'):]
+        _target_name = os.path.join(_dir_path, _tmp_logo_name)
+        if not os.path.exists(_dir_path):
+            os.mkdir(_dir_path)
+        data_file.save(_target_name)
+        return _target_name
 
 
 @app.route('/add_cust_info', methods=['POST'])
@@ -192,7 +195,7 @@ def add_cust_info():
         'create_user': session['user_account'],
         'create_time': datetime.datetime.now().strftime(const.DATETIME_FORMATTER)
     })
-    return mb.add_customer_info(request.form)
+    return mb.add_customer_info(form_data)
 
 
 @app.route('/edit_cust_info', methods=['POST'])
