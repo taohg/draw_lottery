@@ -1,9 +1,24 @@
 from business.sys_user import SysUser
 from business.customer_info import CustomerInfo
+from common.config import load_config
+from common.project_log import logger
 
-def add_customer_info(record_list):
+sys_config = load_config()
+
+
+def add_customer_info(param_data):
     customer_info_dao = CustomerInfo()
-    customer_info_dao.save_record(record_list=record_list)
+    data_cnt = customer_info_dao.get_count()
+    record = dict()
+    record.update(param_data)
+    record.update({
+        'cust_password': sys_config.get('cust_pwd'),
+        'cust_account': f"admin88{str(data_cnt+1).rjust(3, '0')}",
+        'is_valid': 0,
+    })
+    res = customer_info_dao.save_record(record=record)
+    logger.debug(f'新增的客户编号是: {res}')
+    return {'res_code': '0', 'res_msg': 'success'}
 
 
 def get_customer_list(user_account, user_password=''):

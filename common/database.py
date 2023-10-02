@@ -53,6 +53,23 @@ class DbHelper:
             self.conn.commit()
             return self.conn.total_changes
 
+    def insert_sql(self, exec_sql: str, exec_para: tuple):
+        """
+        新增单条数据，返回自增列的值
+        :param exec_sql:
+        :param exec_para:
+        :return:
+        """
+        try:
+            self.cursor.execute(exec_sql, exec_para)
+        except:
+            self.conn.rollback()
+            logger.error(traceback.format_exc())
+            return -1
+        else:
+            self.conn.commit()
+            return self.cursor.lastrowid
+
     def __del__(self):
         try:
             if self.cursor:

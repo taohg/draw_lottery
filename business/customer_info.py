@@ -8,7 +8,7 @@ class CustomerInfo:
         self.db_helper = DbHelper()
         pass
 
-    def save_record(self, record_list):
+    def save_record(self, record):
         _sql = """
             insert into customer_info(
                 --id,
@@ -48,23 +48,31 @@ class CustomerInfo:
                 ?
             )
         """
-        add_list = [(i.get('cust_name'),
-                     i.get('link_name'),
-                     i.get('link_phone'),
-                     i.get('party_name'),
-                     i.get('cust_logo'),
-                     i.get('plan_date'),
-                     i.get('user_num'),
-                     i.get('cust_addr'),
-                     i.get('cust_account'),
-                     i.get('cust_password'),
-                     i.get('act_date'),
-                     i.get('is_act'),
-                     i.get('create_user'),
-                     i.get('create_time'),
-                     i.get('remark'),
-                     i.get('is_valid')) for i in record_list]
-        self.db_helper.exec_sql(_sql, add_list)
+        add_tuple = (record.get('cust_name'),
+                     record.get('link_name'),
+                     record.get('link_phone'),
+                     record.get('party_name'),
+                     record.get('cust_logo'),
+                     record.get('plan_date'),
+                     record.get('user_num'),
+                     record.get('cust_addr'),
+                     record.get('cust_account'),
+                     record.get('cust_password'),
+                     record.get('act_date'),
+                     record.get('is_act'),
+                     record.get('create_user'),
+                     record.get('create_time'),
+                     record.get('remark'),
+                     record.get('is_valid'))
+        return self.db_helper.insert_sql(_sql, add_tuple)
+
+    def get_count(self) -> int:
+        _sql = """
+            select count(*) as data_cnt from customer_info
+        """
+        res_list = self.db_helper.query_sql(_sql)
+        logger.debug(f'res_list:{res_list}')
+        return res_list[0].get('data_cnt')
 
     def get_list(self):
         _sql = """
